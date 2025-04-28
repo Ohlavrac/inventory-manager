@@ -29,7 +29,7 @@ public class ProductEntity {
     private String productName;
     private String brand;
     private int amount;
-    private double value;
+    private double price;
 
     @ManyToMany
     @JoinTable(
