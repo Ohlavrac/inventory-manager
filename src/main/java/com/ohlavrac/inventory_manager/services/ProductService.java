@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.ohlavrac.inventory_manager.domain.entities.ProductEntity;
+import com.ohlavrac.inventory_manager.dtos.products.ProductRequestDTO;
 import com.ohlavrac.inventory_manager.dtos.products.ProductResponseDTO;
 import com.ohlavrac.inventory_manager.mappers.ProductsMapper;
 import com.ohlavrac.inventory_manager.repositories.ProductRepository;
@@ -27,5 +28,12 @@ public class ProductService {
         List<ProductResponseDTO> productsResponse = productsEntity.stream().map(product -> productMapper.ToResponseDTO(product)).toList();
 
         return productsResponse;
+    }
+
+    public ProductResponseDTO createNewProduct(ProductRequestDTO productData) {
+        ProductEntity productEntity = productMapper.requestToEntity(productData);
+        ProductEntity newProduct = productRepository.save(productEntity);
+
+        return productMapper.ToResponseDTO(newProduct);
     }
 }
