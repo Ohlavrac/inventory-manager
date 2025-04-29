@@ -8,6 +8,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.util.Date;
 import java.util.List;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -31,14 +32,16 @@ public class ProductEntity {
     @GeneratedValue
     private UUID id;
 
+    @Column(name = "product_name")
     private String productName;
+    
     private String brand;
     private int amount;
     private double price;
 
     @ManyToMany
     @JoinTable(
-        name = "product_categories",
+        name = "product_category",
         joinColumns = @JoinColumn(name = "product_id"),
         inverseJoinColumns = @JoinColumn(name = "category_id")
     )
