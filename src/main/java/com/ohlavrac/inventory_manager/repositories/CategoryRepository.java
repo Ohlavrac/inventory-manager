@@ -9,5 +9,5 @@ import com.ohlavrac.inventory_manager.domain.entities.CategoryEntity;
 
 @Repository
 public interface CategoryRepository extends JpaRepository<CategoryEntity, UUID> {
-    
+    boolean existsByCategoryName(String categoryName);
 }
