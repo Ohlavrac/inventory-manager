@@ -27,4 +27,9 @@ public class CategoryService {
 
         return categoryMapper.entityToResponseDto(newCategory);
     }
+
+    public boolean categoryExists(String name) {
+        boolean categoryExistsWithName = categoryRepository.existsByCategoryName(name);
+        return categoryExistsWithName;
+    }
 }
