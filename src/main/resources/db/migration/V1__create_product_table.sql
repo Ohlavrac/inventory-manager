@@ -1,0 +1,11 @@
+CREATE EXTENSION IF NOT EXISTS "pgcrypto";
+
+CREATE TABLE product (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY UNIQUE NOT NULL,
+    product_name VARCHAR(200) NOT NULL,
+    brand VARCHAR(200) NOT NULL,
+    amount  INT NOT NULL,
+    price REAL NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+)
