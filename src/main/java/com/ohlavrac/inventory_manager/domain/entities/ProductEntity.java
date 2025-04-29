@@ -1,6 +1,11 @@
 package com.ohlavrac.inventory_manager.domain.entities;
 
 import java.util.UUID;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.util.Date;
 import java.util.List;
 
 import jakarta.persistence.Entity;
@@ -38,4 +43,10 @@ public class ProductEntity {
         inverseJoinColumns = @JoinColumn(name = "category_id")
     )
     private List<CategoryEntity> categories;
+
+    @CreationTimestamp
+    private Date created_at;
+
+    @UpdateTimestamp
+    private Date updated_at;
 }
