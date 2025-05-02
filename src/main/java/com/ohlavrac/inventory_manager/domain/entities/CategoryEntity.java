@@ -29,7 +29,7 @@ public class CategoryEntity {
     @GeneratedValue
     private UUID id;
 
-    @Column(name = "category_name")
+    @Column(name = "category_name", unique = true)
     private String categoryName;
 
     @ManyToMany(mappedBy = "categories")
