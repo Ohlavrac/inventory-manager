@@ -25,6 +25,8 @@ public class CategoryService {
         CategoryEntity categoryEntity = categoryMapper.requestDtoToEntity(categoryData);
         CategoryEntity newCategory = categoryRepository.save(categoryEntity);
 
+        System.out.println(">>>"+ categoryData.categoryName());
+
         return categoryMapper.entityToResponseDto(newCategory);
     }
 
