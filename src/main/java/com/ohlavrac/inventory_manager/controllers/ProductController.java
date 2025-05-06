@@ -3,6 +3,7 @@ package com.ohlavrac.inventory_manager.controllers;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ohlavrac.inventory_manager.domain.entities.ProductEntity;
 import com.ohlavrac.inventory_manager.dtos.products.ProductRequestDTO;
 import com.ohlavrac.inventory_manager.dtos.products.ProductResponseDTO;
 import com.ohlavrac.inventory_manager.services.ProductService;
@@ -23,9 +24,7 @@ public class ProductController {
     }
 
     @PostMapping()
-    public ResponseEntity<ProductResponseDTO> createProduct(@RequestBody ProductRequestDTO productData) {
-        productService.createNewProduct(productData);
-        
+    public ResponseEntity<ProductEntity> createProduct(@RequestBody ProductRequestDTO productData) {
         return ResponseEntity.ok().body(productService.createNewProduct(productData));
     }
     
