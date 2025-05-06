@@ -1,14 +1,13 @@
 package com.ohlavrac.inventory_manager.dtos.products;
 
-import java.util.List;
-
-import com.ohlavrac.inventory_manager.domain.entities.CategoryEntity;
+import java.util.Set;
+import java.util.UUID;
 
 public record ProductRequestDTO(
     String productName,
     String brand,
     int amount,
     double price,
-    List<CategoryEntity> categories
+    Set<UUID> categoriesIds
 ) {
 }

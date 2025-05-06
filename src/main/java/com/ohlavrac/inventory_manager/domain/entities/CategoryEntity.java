@@ -1,14 +1,18 @@
 package com.ohlavrac.inventory_manager.domain.entities;
 
 import java.util.Date;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
@@ -32,8 +36,9 @@ public class CategoryEntity {
     @Column(name = "category_name", unique = true)
     private String categoryName;
 
-    @ManyToMany(mappedBy = "categories")
-    private List<ProductEntity> products;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @ManyToMany(mappedBy = "categories", fetch = FetchType.LAZY)
+    private Set<ProductEntity> products = new HashSet<>();
 
     @CreationTimestamp
     private Date created_at;
