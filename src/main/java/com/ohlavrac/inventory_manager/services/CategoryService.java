@@ -22,10 +22,9 @@ public class CategoryService {
     }
 
     public CategoryResponseDTO createCategory(CategoryRequestDTO categoryData) {
+        System.out.println(categoryData.categoryName());
         CategoryEntity categoryEntity = categoryMapper.requestDtoToEntity(categoryData);
         CategoryEntity newCategory = categoryRepository.save(categoryEntity);
-
-        System.out.println(">>>"+ categoryData.categoryName());
 
         return categoryMapper.entityToResponseDto(newCategory);
     }

@@ -2,6 +2,8 @@ package com.ohlavrac.inventory_manager.services;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -12,6 +14,8 @@ import com.ohlavrac.inventory_manager.dtos.products.ProductResponseDTO;
 import com.ohlavrac.inventory_manager.mappers.ProductsMapper;
 import com.ohlavrac.inventory_manager.repositories.CategoryRepository;
 import com.ohlavrac.inventory_manager.repositories.ProductRepository;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class ProductService {
@@ -36,36 +40,20 @@ public class ProductService {
         return productsResponse;
     }
 
-    public ProductResponseDTO createNewProduct(ProductRequestDTO productData) {
-        List<CategoryEntity> categories = new ArrayList<CategoryEntity>();
+    @Transactional
+    public ProductEntity createNewProduct(ProductRequestDTO productData) {
+        //ProductEntity newProduct = productMapper.requestToEntity(productData);
+        ProductEntity newProduct = new ProductEntity();
 
+        newProduct.setProductName(productData.productName());
+        newProduct.setBrand(productData.brand());
+        newProduct.setPrice(productData.price());
+        newProduct.setAmount(productData.amount());
 
-        //VERIFY IF CATEGORY EXISTS IN DB (NEED VERIFY UPPERCASE LOWERCASE AND SPACES)
-        for (int index = 0; index < productData.categories().size(); index++) {
-            String categoryName = productData.categories().get(index).getCategoryName();
+        Set<CategoryEntity> categories = categoryRepository.findAllById(productData.categoriesIds().stream().collect(Collectors.toSet())).stream().collect(Collectors.toSet());
 
-            if (!categoryRepository.findAll().isEmpty()) {
-                if (!categoryRepository.findByCategoryName(categoryName).isPresent()) {
-                    CategoryEntity newCategory = new CategoryEntity();
-                    newCategory.setCategoryName(categoryName);
-                    categoryRepository.save(newCategory);
-                    categories.add(newCategory);
-                } else {
-                    continue;
-                }
-            } else {
-                CategoryEntity newCategory = new CategoryEntity();
-                newCategory.setCategoryName(categoryName);
-                categoryRepository.save(newCategory);
-                categories.add(newCategory);
-            }
-        }
-
-        ProductEntity newProduct = productMapper.requestToEntity(productData);
         newProduct.setCategories(categories);
 
-        ProductEntity saved = productRepository.save(newProduct);
-
-        return productMapper.ToResponseDTO(saved);
+        return  productRepository.save(newProduct);
     }
 }

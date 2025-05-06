@@ -16,7 +16,7 @@ public class ProductsMapper {
         );
     }
 
-    public ProductEntity requestToEntity (ProductRequestDTO productRequestDTO) {
+    /*public ProductEntity requestToEntity (ProductRequestDTO productRequestDTO) {
         ProductEntity productEntity = new ProductEntity();
         productEntity.setProductName(productRequestDTO.productName());
         productEntity.setBrand(productRequestDTO.brand());
@@ -25,5 +25,5 @@ public class ProductsMapper {
         productEntity.setCategories(productRequestDTO.categories());
 
         return productEntity;
-    }
+    }*/
 }
