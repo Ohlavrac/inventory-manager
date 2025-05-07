@@ -5,7 +5,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ohlavrac.inventory_manager.domain.entities.ProductEntity;
 import com.ohlavrac.inventory_manager.dtos.products.ProductRequestDTO;
-import com.ohlavrac.inventory_manager.dtos.products.ProductResponseDTO;
 import com.ohlavrac.inventory_manager.services.ProductService;
 
 import org.springframework.http.ResponseEntity;

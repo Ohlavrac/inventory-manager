@@ -1,7 +1,6 @@
 package com.ohlavrac.inventory_manager.mappers;
 
 import com.ohlavrac.inventory_manager.domain.entities.ProductEntity;
-import com.ohlavrac.inventory_manager.dtos.products.ProductRequestDTO;
 import com.ohlavrac.inventory_manager.dtos.products.ProductResponseDTO;
 
 public class ProductsMapper {
