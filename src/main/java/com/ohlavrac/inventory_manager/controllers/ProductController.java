@@ -5,8 +5,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ohlavrac.inventory_manager.domain.entities.ProductEntity;
 import com.ohlavrac.inventory_manager.dtos.products.ProductRequestDTO;
+import com.ohlavrac.inventory_manager.exceptions.ResorceNotFoundException;
 import com.ohlavrac.inventory_manager.services.ProductService;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,8 +26,12 @@ public class ProductController {
     }
 
     @PostMapping()
-    public ResponseEntity<ProductEntity> createProduct(@RequestBody ProductRequestDTO productData) {
-        return ResponseEntity.ok().body(productService.createNewProduct(productData));
+    public ResponseEntity<?> createProduct(@RequestBody ProductRequestDTO productData) {
+        try {
+            return ResponseEntity.ok().body(productService.createNewProduct(productData));
+        } catch (ResorceNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
     
 }

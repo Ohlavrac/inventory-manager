@@ -10,6 +10,7 @@ import com.ohlavrac.inventory_manager.domain.entities.CategoryEntity;
 import com.ohlavrac.inventory_manager.domain.entities.ProductEntity;
 import com.ohlavrac.inventory_manager.dtos.products.ProductRequestDTO;
 import com.ohlavrac.inventory_manager.dtos.products.ProductResponseDTO;
+import com.ohlavrac.inventory_manager.exceptions.ResorceNotFoundException;
 import com.ohlavrac.inventory_manager.mappers.ProductsMapper;
 import com.ohlavrac.inventory_manager.repositories.CategoryRepository;
 import com.ohlavrac.inventory_manager.repositories.ProductRepository;
@@ -41,7 +42,6 @@ public class ProductService {
 
     @Transactional
     public ProductEntity createNewProduct(ProductRequestDTO productData) {
-        //ProductEntity newProduct = productMapper.requestToEntity(productData);
         ProductEntity newProduct = new ProductEntity();
 
         newProduct.setProductName(productData.productName());
@@ -49,7 +49,10 @@ public class ProductService {
         newProduct.setPrice(productData.price());
         newProduct.setAmount(productData.amount());
 
-        Set<CategoryEntity> categories = categoryRepository.findAllById(productData.categoriesIds().stream().collect(Collectors.toSet())).stream().collect(Collectors.toSet());
+        Set<CategoryEntity> categories = productData.categoriesIds().stream()
+        .map(id -> categoryRepository.findById(id)
+            .orElseThrow(() -> new ResorceNotFoundException("Category Not Found With ID: " + id)))
+        .collect(Collectors.toSet());
 
         newProduct.setCategories(categories);
 
