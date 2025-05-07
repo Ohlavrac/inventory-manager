@@ -2,6 +2,7 @@ package com.ohlavrac.inventory_manager.services;
 
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -38,6 +39,14 @@ public class ProductService {
         List<ProductResponseDTO> productsResponse = productsEntity.stream().map(product -> productMapper.ToResponseDTO(product)).toList();
 
         return productsResponse;
+    }
+
+    public ProductResponseDTO getProductByID(UUID id) {
+        ProductEntity productEntity = productRepository.findById(id).orElseThrow(
+            () -> new ResorceNotFoundException("Product Not Found With ID: "+ id)
+        );
+
+        return productMapper.ToResponseDTO(productEntity);
     }
 
     @Transactional
