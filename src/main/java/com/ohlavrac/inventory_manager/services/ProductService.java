@@ -49,6 +49,27 @@ public class ProductService {
         return productMapper.ToResponseDTO(productEntity);
     }
 
+    public ProductEntity updateProduct(UUID productId, ProductRequestDTO productData) {
+        ProductEntity product = productRepository.findById(productId).orElseThrow(() -> new ResorceNotFoundException("Product Not Found With ID: "+ productId));
+        
+
+
+        product.setProductName(productData.productName().isBlank() ? product.getProductName() : productData.productName());
+        product.setBrand(productData.brand().isBlank() ? product.getBrand() : productData.brand());
+        product.setAmount(productData.amount() <=0 ? product.getAmount() : productData.amount());
+        product.setPrice(productData.price() <= 0.0 ? product.getPrice() : productData.price());
+
+        Set<CategoryEntity> categories = productData.categoriesIds().stream()
+        .map(id -> categoryRepository.findById(id)
+            .orElseThrow(() -> new ResorceNotFoundException("Category Not Found With ID: " + id)))
+        .collect(Collectors.toSet());
+
+        product.setCategories(categories);
+
+        ProductEntity updatedProduct = productRepository.save(product);
+        return updatedProduct;
+    }
+
     @Transactional
     public ProductEntity createNewProduct(ProductRequestDTO productData) {
         ProductEntity newProduct = new ProductEntity();
