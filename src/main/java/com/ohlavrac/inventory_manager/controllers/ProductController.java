@@ -3,7 +3,6 @@ package com.ohlavrac.inventory_manager.controllers;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ohlavrac.inventory_manager.domain.entities.ProductEntity;
 import com.ohlavrac.inventory_manager.dtos.products.ProductRequestDTO;
 import com.ohlavrac.inventory_manager.dtos.products.ProductResponseDTO;
 import com.ohlavrac.inventory_manager.exceptions.ResorceNotFoundException;
