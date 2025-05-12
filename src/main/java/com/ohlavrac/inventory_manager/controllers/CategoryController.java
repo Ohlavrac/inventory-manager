@@ -1,7 +1,9 @@
 package com.ohlavrac.inventory_manager.controllers;
 
 import java.util.List;
+import java.util.UUID;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,8 +13,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ohlavrac.inventory_manager.dtos.category.CategoryNameResponseDTO;
 import com.ohlavrac.inventory_manager.dtos.category.CategoryRequestDTO;
 import com.ohlavrac.inventory_manager.dtos.category.CategoryResponseDTO;
+import com.ohlavrac.inventory_manager.exceptions.ResorceNotFoundException;
 import com.ohlavrac.inventory_manager.services.CategoryService;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController
 @RequestMapping("/api/category")
@@ -32,6 +38,15 @@ public class CategoryController {
     @GetMapping()
     public ResponseEntity<List<CategoryNameResponseDTO>> getCategories() {
         return ResponseEntity.ok().body(categoryService.getAllCategories());
+    }
+    
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getCategoryDetailById(@PathVariable UUID id) {
+        try {
+            return ResponseEntity.ok().body(categoryService.getCategoryDetailById(id));
+        } catch (ResorceNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
     
 }

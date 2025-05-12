@@ -11,7 +11,7 @@ Restful API para gerenciamento de inventario, feito com base no desafio de back-
 - [OK] `DELETE /products/{productId}`: Delete a product.
 - [OK] `GET /categories`: Retrieve all categories.
 - [OK] `POST /categories`: Create a new category.
-- [TODO] `GET /categories/{categoryId}`: Retrieve details about a specific category.
+- [OK] `GET /categories/{categoryId}`: Retrieve details about a specific category.
 - [TODO] `PUT /categories/{categoryId}`: Update an existing category.
 - [TODO] `DELETE /categories/{categoryId}`: Delete a category.
 - [TODO] `GET /orders`: Retrieve all orders.

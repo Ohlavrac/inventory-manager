@@ -1,6 +1,7 @@
 package com.ohlavrac.inventory_manager.services;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
@@ -8,6 +9,7 @@ import com.ohlavrac.inventory_manager.domain.entities.CategoryEntity;
 import com.ohlavrac.inventory_manager.dtos.category.CategoryNameResponseDTO;
 import com.ohlavrac.inventory_manager.dtos.category.CategoryRequestDTO;
 import com.ohlavrac.inventory_manager.dtos.category.CategoryResponseDTO;
+import com.ohlavrac.inventory_manager.exceptions.ResorceNotFoundException;
 import com.ohlavrac.inventory_manager.mappers.CategoryMapper;
 import com.ohlavrac.inventory_manager.repositories.CategoryRepository;
 
@@ -36,6 +38,13 @@ public class CategoryService {
 
         List<CategoryNameResponseDTO> result = categories.stream().map(category -> categoryMapper.entityToResponseNameDTO(category)).toList();
     
+        return result;
+    }
+
+    public CategoryResponseDTO getCategoryDetailById(UUID id) {
+        CategoryEntity category = categoryRepository.findById(id).orElseThrow(() -> new ResorceNotFoundException("Category Not Found With ID: "+ id));
+
+        CategoryResponseDTO result = categoryMapper.entityToResponseDto(category);
         return result;
     }
 
