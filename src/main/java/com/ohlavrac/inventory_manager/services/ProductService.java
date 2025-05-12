@@ -70,6 +70,13 @@ public class ProductService {
         return updatedProduct;
     }
 
+    public boolean deleteProduct(UUID id) {
+        ProductEntity product = productRepository.findById(id).orElseThrow(() -> new ResorceNotFoundException("Product Not Found With ID: "+ id));
+        
+        productRepository.delete(product);
+        return true;
+    }
+
     @Transactional
     public ProductEntity createNewProduct(ProductRequestDTO productData) {
         ProductEntity newProduct = new ProductEntity();
