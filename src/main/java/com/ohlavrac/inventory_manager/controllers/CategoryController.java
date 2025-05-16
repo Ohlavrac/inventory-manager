@@ -17,7 +17,8 @@ import com.ohlavrac.inventory_manager.exceptions.ResorceNotFoundException;
 import com.ohlavrac.inventory_manager.services.CategoryService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PutMapping;
+
 
 
 @RestController
@@ -44,6 +45,15 @@ public class CategoryController {
     public ResponseEntity<?> getCategoryDetailById(@PathVariable UUID id) {
         try {
             return ResponseEntity.ok().body(categoryService.getCategoryDetailById(id));
+        } catch (ResorceNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateCategory(@PathVariable UUID id, @RequestBody CategoryRequestDTO categoryData) {
+        try {
+            return ResponseEntity.ok().body(categoryService.updateCategory(id, categoryData));
         } catch (ResorceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }

@@ -48,6 +48,16 @@ public class CategoryService {
         return result;
     }
 
+    public CategoryResponseDTO updateCategory(UUID id, CategoryRequestDTO categoryData) {
+        CategoryEntity categoryEntity = categoryRepository.findById(id).orElseThrow(() -> new ResorceNotFoundException("Category Not Found With ID: " + id));
+
+        categoryEntity.setCategoryName(categoryData.categoryName().isEmpty() ? categoryEntity.getCategoryName() : categoryData.categoryName());
+
+        CategoryEntity updatedCategory = categoryRepository.save(categoryEntity);
+
+        return categoryMapper.entityToResponseDto(updatedCategory);
+    }
+
     public boolean categoryExists(String name) {
         boolean categoryExistsWithName = categoryRepository.existsByCategoryName(name);
         return categoryExistsWithName;
