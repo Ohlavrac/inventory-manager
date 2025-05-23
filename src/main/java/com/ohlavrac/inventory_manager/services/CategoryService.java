@@ -9,6 +9,7 @@ import com.ohlavrac.inventory_manager.domain.entities.CategoryEntity;
 import com.ohlavrac.inventory_manager.dtos.category.CategoryNameResponseDTO;
 import com.ohlavrac.inventory_manager.dtos.category.CategoryRequestDTO;
 import com.ohlavrac.inventory_manager.dtos.category.CategoryResponseDTO;
+import com.ohlavrac.inventory_manager.exceptions.DeleteException;
 import com.ohlavrac.inventory_manager.exceptions.ResorceNotFoundException;
 import com.ohlavrac.inventory_manager.mappers.CategoryMapper;
 import com.ohlavrac.inventory_manager.repositories.CategoryRepository;
@@ -56,6 +57,19 @@ public class CategoryService {
         CategoryEntity updatedCategory = categoryRepository.save(categoryEntity);
 
         return categoryMapper.entityToResponseDto(updatedCategory);
+    }
+
+    public boolean deleteCategory(UUID id) {
+        CategoryEntity categoryEntity = categoryRepository.findById(id).orElseThrow(() -> new ResorceNotFoundException("Category No Found With ID: "+ id));
+
+        System.out.println(categoryEntity.getCategoryName());
+
+        if (categoryEntity.getProducts().size() != 0) {
+            throw new DeleteException("This Category Cant Be Deleted Because This Category Has Products Linked. (ID: "+ id +" )");
+        } else {
+            categoryRepository.delete(categoryEntity);
+            return true;
+        }
     }
 
     public boolean categoryExists(String name) {
