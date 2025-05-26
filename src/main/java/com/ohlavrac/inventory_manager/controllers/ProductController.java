@@ -5,14 +5,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ohlavrac.inventory_manager.dtos.products.ProductRequestDTO;
 import com.ohlavrac.inventory_manager.dtos.products.ProductResponseDTO;
-import com.ohlavrac.inventory_manager.exceptions.ResorceNotFoundException;
 import com.ohlavrac.inventory_manager.services.ProductService;
 
 import java.util.List;
 import java.util.UUID;
 
-import org.apache.catalina.connector.Response;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -36,20 +33,12 @@ public class ProductController {
 
     @PostMapping()
     public ResponseEntity<?> createProduct(@RequestBody ProductRequestDTO productData) {
-        try {
-            return ResponseEntity.ok().body(productService.createNewProduct(productData));
-        } catch (ResorceNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+        return ResponseEntity.ok().body(productService.createNewProduct(productData));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateProduct(@PathVariable UUID id, @RequestBody ProductRequestDTO productData) {
-        try {
-            return ResponseEntity.ok().body(productService.updateProduct(id, productData));
-        } catch (ResorceNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+        return ResponseEntity.ok().body(productService.updateProduct(id, productData));
     }
     
     @GetMapping()
@@ -60,25 +49,13 @@ public class ProductController {
     
     @GetMapping("/{id}")
     public ResponseEntity<?> getProductById(@PathVariable UUID id) {
-        try {
-            ProductResponseDTO result = productService.getProductByID(id);
-            return ResponseEntity.ok().body(result);
-        } catch (ResorceNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+        ProductResponseDTO result = productService.getProductByID(id);
+        return ResponseEntity.ok().body(result);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteProduct(@PathVariable UUID id) {
-        try {
-            boolean result = productService.deleteProduct(id);
-            if (result) {
-                return ResponseEntity.ok().body("Product deleted");
-            } else {
-                return ResponseEntity.badRequest().body("Error");
-            }
-        } catch (ResorceNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+        productService.deleteProduct(id);
+        return ResponseEntity.status(204).body("Product deleted");
     }
 }
