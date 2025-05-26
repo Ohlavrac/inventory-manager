@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ohlavrac.inventory_manager.dtos.category.CategoryNameResponseDTO;
 import com.ohlavrac.inventory_manager.dtos.category.CategoryRequestDTO;
 import com.ohlavrac.inventory_manager.dtos.category.CategoryResponseDTO;
-import com.ohlavrac.inventory_manager.exceptions.DeleteException;
 import com.ohlavrac.inventory_manager.exceptions.ResorceNotFoundException;
 import com.ohlavrac.inventory_manager.services.CategoryService;
 
@@ -65,13 +64,7 @@ public class CategoryController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteCategory(@PathVariable UUID id) {
-        try {
-            categoryService.deleteCategory(id);
-            return ResponseEntity.status(204).body("Category deleted successfully");
-        } catch (ResorceNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        } catch (DeleteException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
-        }
+        categoryService.deleteCategory(id);
+        return ResponseEntity.status(204).body("Category deleted successfully");
     }
 }
