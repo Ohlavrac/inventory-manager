@@ -45,20 +45,12 @@ public class CategoryController {
     
     @GetMapping("/{id}")
     public ResponseEntity<?> getCategoryDetailById(@PathVariable UUID id) {
-        try {
-            return ResponseEntity.ok().body(categoryService.getCategoryDetailById(id));
-        } catch (ResorceNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+        return ResponseEntity.ok().body(categoryService.getCategoryDetailById(id));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateCategory(@PathVariable UUID id, @RequestBody CategoryRequestDTO categoryData) {
-        try {
-            return ResponseEntity.ok().body(categoryService.updateCategory(id, categoryData));
-        } catch (ResorceNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+        return ResponseEntity.ok().body(categoryService.updateCategory(id, categoryData));
     }
     
 
