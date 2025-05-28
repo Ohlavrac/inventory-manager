@@ -1,6 +1,7 @@
 package com.ohlavrac.inventory_manager.services;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
@@ -72,6 +73,13 @@ public class OrderService {
             order.getDescription(),
             order.getProductOrder().getProductName()
         )).toList();
+        return response;
+    }
+
+    public OrderResponseDTO getOrderDetail(UUID id) {
+        OrderEntity order = orderRepository.findById(id).orElseThrow(() -> new ResorceNotFoundException("Order Not Found With ID: "+ id));
+
+        OrderResponseDTO response = orderMapper.toOrderResponseDTO(order);
         return response;
     }
 }

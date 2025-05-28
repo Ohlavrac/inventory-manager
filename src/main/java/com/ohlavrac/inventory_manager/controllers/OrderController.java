@@ -9,11 +9,15 @@ import com.ohlavrac.inventory_manager.dtos.order.OrderSimpleResponseDTO;
 import com.ohlavrac.inventory_manager.services.OrderService;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 
 
@@ -36,6 +40,12 @@ public class OrderController {
     public ResponseEntity<?> getAllOrders() {
         List<OrderSimpleResponseDTO> response = orderService.getAllOrders();
 
+        return ResponseEntity.ok().body(response);
+    }
+    
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getOrderDetails(@PathVariable UUID id) {
+        OrderResponseDTO response = orderService.getOrderDetail(id);
         return ResponseEntity.ok().body(response);
     }
     
