@@ -3,7 +3,6 @@ package com.ohlavrac.inventory_manager.controllers;
 import java.util.List;
 import java.util.UUID;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ohlavrac.inventory_manager.dtos.category.CategoryNameResponseDTO;
 import com.ohlavrac.inventory_manager.dtos.category.CategoryRequestDTO;
 import com.ohlavrac.inventory_manager.dtos.category.CategoryResponseDTO;
-import com.ohlavrac.inventory_manager.exceptions.ResorceNotFoundException;
 import com.ohlavrac.inventory_manager.services.CategoryService;
 
 import org.springframework.web.bind.annotation.DeleteMapping;

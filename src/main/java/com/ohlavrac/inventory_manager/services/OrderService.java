@@ -41,8 +41,6 @@ public class OrderService {
 
             OrderEntity orderSaved = orderRepository.save(order);
 
-            System.out.println(product.getId());
-
             productRepository.updateProductAmount(product.getId(), product.getAmount()-orderData.quantOrder());
 
             OrderResponseDTO response = new OrderResponseDTO(
