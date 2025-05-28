@@ -1,13 +1,17 @@
 package com.ohlavrac.inventory_manager.services;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.ohlavrac.inventory_manager.domain.entities.OrderEntity;
 import com.ohlavrac.inventory_manager.domain.entities.ProductEntity;
 import com.ohlavrac.inventory_manager.dtos.order.OrderRequestDTO;
 import com.ohlavrac.inventory_manager.dtos.order.OrderResponseDTO;
+import com.ohlavrac.inventory_manager.dtos.order.OrderSimpleResponseDTO;
 import com.ohlavrac.inventory_manager.exceptions.ResorceNotFoundException;
 import com.ohlavrac.inventory_manager.exceptions.ResourceAmountExecption;
+import com.ohlavrac.inventory_manager.mappers.OrderMapper;
 import com.ohlavrac.inventory_manager.repositories.OrderRepository;
 import com.ohlavrac.inventory_manager.repositories.ProductRepository;
 
@@ -15,13 +19,16 @@ import com.ohlavrac.inventory_manager.repositories.ProductRepository;
 public class OrderService {
     private OrderRepository orderRepository;
     private ProductRepository productRepository;
+    private OrderMapper orderMapper;
 
     public OrderService(
         OrderRepository orderRepository,
-        ProductRepository productRepository
+        ProductRepository productRepository,
+        OrderMapper orderMapper
     ) {
         this.orderRepository = orderRepository;
         this.productRepository = productRepository;
+        this.orderMapper = orderMapper;
     }
 
     public OrderResponseDTO createOrder(OrderRequestDTO orderData) {
@@ -53,5 +60,18 @@ public class OrderService {
 
             return response;
         }
+    }
+
+    public List<OrderSimpleResponseDTO> getAllOrders() {
+        List<OrderEntity> orders = orderRepository.findAll();
+
+        List<OrderSimpleResponseDTO> response = orders.stream().map((order) -> new OrderSimpleResponseDTO(
+            order.getId(),
+            order.getOrderName(),
+            order.getQuantOrder(),
+            order.getDescription(),
+            order.getProductOrder().getProductName()
+        )).toList();
+        return response;
     }
 }
