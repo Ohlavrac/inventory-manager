@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.ohlavrac.inventory_manager.domain.entities.OrderEntity;
 import com.ohlavrac.inventory_manager.domain.entities.ProductEntity;
+import com.ohlavrac.inventory_manager.domain.enums.OrderStatus;
 import com.ohlavrac.inventory_manager.dtos.order.OrderRequestDTO;
 import com.ohlavrac.inventory_manager.dtos.order.OrderResponseDTO;
 import com.ohlavrac.inventory_manager.dtos.order.OrderSimpleResponseDTO;
@@ -46,6 +47,7 @@ public class OrderService {
             order.setQuantOrder(orderData.quantOrder());
             order.setDescription(orderData.description().isEmpty() ? defaultDescription : orderData.description());
             order.setProductOrder(product);
+            order.setOrderStatus(OrderStatus.PENDING);
 
             OrderEntity orderSaved = orderRepository.save(order);
 
@@ -56,7 +58,8 @@ public class OrderService {
                 orderSaved.getOrderName(),
                 orderSaved.getQuantOrder(),
                 orderSaved.getDescription(),
-                orderSaved.getProductOrder()
+                orderSaved.getProductOrder(),
+                orderSaved.getOrderStatus()
             );
 
             return response;

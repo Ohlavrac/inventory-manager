@@ -10,7 +10,8 @@ public class OrderMapper {
             orderEntity.getOrderName(),
             orderEntity.getQuantOrder(),
             orderEntity.getDescription(),
-            orderEntity.getProductOrder()
+            orderEntity.getProductOrder(),
+            orderEntity.getOrderStatus()
         );
     }
 }
