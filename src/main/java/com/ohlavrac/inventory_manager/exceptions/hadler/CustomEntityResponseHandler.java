@@ -12,6 +12,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import com.ohlavrac.inventory_manager.exceptions.DeleteException;
 import com.ohlavrac.inventory_manager.exceptions.ExceptionResponse;
+import com.ohlavrac.inventory_manager.exceptions.OrderUpdateException;
 import com.ohlavrac.inventory_manager.exceptions.ResorceNotFoundException;
 import com.ohlavrac.inventory_manager.exceptions.ResourceAmountExecption;
 
@@ -54,6 +55,17 @@ public class CustomEntityResponseHandler extends ResponseEntityExceptionHandler 
 
     @ExceptionHandler(ResourceAmountExecption.class)
     public final ResponseEntity<ExceptionResponse> handleResourceAmountException(Exception exception, WebRequest request) {
+        ExceptionResponse response = new ExceptionResponse(
+            new Date(),
+            exception.getMessage(),
+            request.getDescription(false)
+        );
+
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(OrderUpdateException.class)
+    public final ResponseEntity<ExceptionResponse> handleOrderUpdateException(Exception exception, WebRequest request) {
         ExceptionResponse response = new ExceptionResponse(
             new Date(),
             exception.getMessage(),
