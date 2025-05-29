@@ -7,8 +7,12 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.SecondaryRow;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.ohlavrac.inventory_manager.domain.enums.OrderStatus;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -39,6 +43,10 @@ public class OrderEntity {
 
     @Column(name = "order_description")
     private String description;
+
+    @Column(name = "order_status")
+    @Enumerated(EnumType.STRING)
+    private OrderStatus orderStatus;
     
     @ManyToOne
     @JoinColumn(name = "product_id", referencedColumnName = "id")

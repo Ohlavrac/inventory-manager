@@ -1,0 +1,2 @@
+ALTER TABLE orders
+ADD COLUMN order_status VARCHAR(150)
