@@ -51,7 +51,8 @@ public class OrderService {
 
             OrderEntity orderSaved = orderRepository.save(order);
 
-            productRepository.updateProductAmount(product.getId(), product.getAmount()-orderData.quantOrder());
+            //JUST UPDATE PRODUCT AMOUNT WHEN ORDER IS ACCEPTED
+            //productRepository.updateProductAmount(product.getId(), product.getAmount()-orderData.quantOrder());
 
             OrderResponseDTO response = new OrderResponseDTO(
                 orderSaved.getId(),
@@ -74,7 +75,8 @@ public class OrderService {
             order.getOrderName(),
             order.getQuantOrder(),
             order.getDescription(),
-            order.getProductOrder().getProductName()
+            order.getProductOrder().getProductName(),
+            order.getOrderStatus()
         )).toList();
         return response;
     }
