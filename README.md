@@ -17,7 +17,7 @@ Restful API para gerenciamento de inventario, feito com base no desafio de back-
 - [OK] `GET /orders`: Retrieve all orders.
 - [OK] `POST /orders`: Create a new order.
 - [OK] `GET /orders/{orderId}`: Retrieve details about a specific order.
-- [TODO] `PUT /orders/{orderId}`: Update an existing order (e.g., change order status).
+- [OK] `PUT /orders/{orderId}/status`: Update a status of existing order (e.g., change order status).
 - [TODO] `DELETE /orders/{orderId}`: Cancel an order.
 
 ## Desafio

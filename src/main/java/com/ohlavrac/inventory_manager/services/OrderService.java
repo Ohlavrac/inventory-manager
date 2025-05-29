@@ -11,6 +11,8 @@ import com.ohlavrac.inventory_manager.domain.enums.OrderStatus;
 import com.ohlavrac.inventory_manager.dtos.order.OrderRequestDTO;
 import com.ohlavrac.inventory_manager.dtos.order.OrderResponseDTO;
 import com.ohlavrac.inventory_manager.dtos.order.OrderSimpleResponseDTO;
+import com.ohlavrac.inventory_manager.dtos.order.OrderStatusRequestDTO;
+import com.ohlavrac.inventory_manager.exceptions.OrderUpdateException;
 import com.ohlavrac.inventory_manager.exceptions.ResorceNotFoundException;
 import com.ohlavrac.inventory_manager.exceptions.ResourceAmountExecption;
 import com.ohlavrac.inventory_manager.mappers.OrderMapper;
@@ -86,5 +88,40 @@ public class OrderService {
 
         OrderResponseDTO response = orderMapper.toOrderResponseDTO(order);
         return response;
+    }
+
+    public OrderSimpleResponseDTO updateOrderStatus(UUID id, OrderStatusRequestDTO status) {
+        OrderEntity order = orderRepository.findById(id).orElseThrow(() -> new ResorceNotFoundException("Order Not Found With ID: "+ id));
+
+        if (order.getOrderStatus() == OrderStatus.CANCELED || order.getOrderStatus() == OrderStatus.REFUSED || order.getOrderStatus() == OrderStatus.COMPLETED) {
+            throw new OrderUpdateException("The Status ("+ order.getOrderStatus() +") Order Can't Be Updated");
+        } else {
+            orderRepository.updateTheOrderStatus(id, status.orderStatus());
+        }
+
+        if (status.orderStatus() == OrderStatus.PENDING || 
+            status.orderStatus() == OrderStatus.REFUSED || 
+            status.orderStatus() == OrderStatus.CANCELED && 
+            order.getOrderStatus() == OrderStatus.ACCEPTED
+        ) {
+            productRepository.updateProductAmount(order.getProductOrder().getId(), order.getProductOrder().getAmount()+order.getQuantOrder());
+        } else {
+            if (order.getProductOrder().getAmount() < order.getQuantOrder()) {
+                throw new ResourceAmountExecption("Not Enough Product in Sotck");
+            }
+            
+            productRepository.updateProductAmount(order.getProductOrder().getId(), order.getProductOrder().getAmount()-order.getQuantOrder());
+        }
+
+        OrderEntity orderResult = orderRepository.findById(id).orElseThrow(() -> new ResorceNotFoundException("Order Not Found With ID: "+ id));
+
+        return new OrderSimpleResponseDTO(
+            orderResult.getId(),
+            orderResult.getOrderName(),
+            orderResult.getQuantOrder(),
+            orderResult.getDescription(),
+            orderResult.getOrderName(),
+            status.orderStatus()
+        );
     }
 }
