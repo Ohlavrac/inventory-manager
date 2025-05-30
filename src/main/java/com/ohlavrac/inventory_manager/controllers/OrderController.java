@@ -3,7 +3,6 @@ package com.ohlavrac.inventory_manager.controllers;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ohlavrac.inventory_manager.domain.enums.OrderStatus;
 import com.ohlavrac.inventory_manager.dtos.order.OrderRequestDTO;
 import com.ohlavrac.inventory_manager.dtos.order.OrderResponseDTO;
 import com.ohlavrac.inventory_manager.dtos.order.OrderSimpleResponseDTO;
