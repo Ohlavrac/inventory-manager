@@ -1,8 +1,10 @@
 package com.ohlavrac.inventory_manager.controllers;
 
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ohlavrac.inventory_manager.domain.enums.OrderStatus;
 import com.ohlavrac.inventory_manager.dtos.order.OrderRequestDTO;
 import com.ohlavrac.inventory_manager.dtos.order.OrderResponseDTO;
 import com.ohlavrac.inventory_manager.dtos.order.OrderSimpleResponseDTO;
@@ -38,8 +40,11 @@ public class OrderController {
     }
     
     @GetMapping()
-    public ResponseEntity<?> getAllOrders() {
-        List<OrderSimpleResponseDTO> response = orderService.getAllOrders();
+    public ResponseEntity<?> getAllOrders(
+        @RequestParam(value = "status", required = false) OrderStatus orderStatus
+    ) {
+        
+        List<OrderSimpleResponseDTO> response = orderService.getAllOrders(orderStatus);
 
         return ResponseEntity.ok().body(response);
     }

@@ -1,5 +1,6 @@
 package com.ohlavrac.inventory_manager.services;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -70,8 +71,14 @@ public class OrderService {
         }
     }
 
-    public List<OrderSimpleResponseDTO> getAllOrders() {
-        List<OrderEntity> orders = orderRepository.findAll();
+    public List<OrderSimpleResponseDTO> getAllOrders(OrderStatus status){
+        List<OrderEntity> orders = new ArrayList<>();
+
+        if (status == null) {
+            orders = orderRepository.findAll();
+        } else {
+            orders = orderRepository.getOrderByStatus(status);
+        }
 
         List<OrderSimpleResponseDTO> response = orders.stream().map((order) -> new OrderSimpleResponseDTO(
             order.getId(),

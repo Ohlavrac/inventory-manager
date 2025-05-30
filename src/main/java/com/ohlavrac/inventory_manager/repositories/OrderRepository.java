@@ -1,5 +1,6 @@
 package com.ohlavrac.inventory_manager.repositories;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -20,4 +21,7 @@ public interface OrderRepository extends JpaRepository<OrderEntity, UUID> {
     @Transactional
     @Query("UPDATE OrderEntity o SET o.orderStatus = :orderStatus WHERE o.id = :id")
     void updateTheOrderStatus(@Param(value = "id") UUID id, @Param(value = "orderStatus") OrderStatus orderStatus);
+
+    @Query("SELECT o FROM OrderEntity o WHERE o.orderStatus = :orderStatus")
+    List<OrderEntity> getOrderByStatus(@Param(value="orderStatus") OrderStatus orderStatus);
 }
