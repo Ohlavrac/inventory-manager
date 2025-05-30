@@ -1,5 +1,6 @@
 package com.ohlavrac.inventory_manager.services;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.ohlavrac.inventory_manager.domain.entities.CategoryEntity;
 import com.ohlavrac.inventory_manager.domain.entities.ProductEntity;
+import com.ohlavrac.inventory_manager.domain.enums.StockLevel;
 import com.ohlavrac.inventory_manager.dtos.products.ProductRequestDTO;
 import com.ohlavrac.inventory_manager.dtos.products.ProductResponseDTO;
 import com.ohlavrac.inventory_manager.exceptions.ResorceNotFoundException;
@@ -34,11 +36,26 @@ public class ProductService {
         this.productMapper = productMapper;
     }
 
-    public List<ProductResponseDTO> getProducts() {
-        List<ProductEntity> productsEntity = productRepository.findAll();
-        List<ProductResponseDTO> productsResponse = productsEntity.stream().map(product -> productMapper.ToResponseDTO(product)).toList();
+    public List<ProductResponseDTO> getProducts(StockLevel stock) {
+        List<ProductEntity> products = new ArrayList<>();
 
-        return productsResponse;
+        //TODO ORGANIZAR ISSO DE FORMA NORMAL.
+        int LOWSOTCKLEVEL = 4; 
+
+        switch (stock) {
+            case ALL:
+                products = productRepository.findAll();
+                break;
+            case LOW:
+                products = productRepository.getProductByStock(LOWSOTCKLEVEL);
+                break;
+            default:
+                products = productRepository.findAll();
+                break;
+        }
+
+        List<ProductResponseDTO> response = products.stream().map(product -> productMapper.ToResponseDTO(product)).toList();
+        return response;
     }
 
     public ProductResponseDTO getProductByID(UUID id) {

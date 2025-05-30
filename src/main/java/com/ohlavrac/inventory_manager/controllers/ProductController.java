@@ -1,8 +1,10 @@
 package com.ohlavrac.inventory_manager.controllers;
 
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ohlavrac.inventory_manager.domain.enums.StockLevel;
 import com.ohlavrac.inventory_manager.dtos.products.ProductRequestDTO;
 import com.ohlavrac.inventory_manager.dtos.products.ProductResponseDTO;
 import com.ohlavrac.inventory_manager.services.ProductService;
@@ -42,8 +44,10 @@ public class ProductController {
     }
     
     @GetMapping()
-    public ResponseEntity<List<ProductResponseDTO>> getAllProducts() {
-        List<ProductResponseDTO> products = productService.getProducts();
+    public ResponseEntity<List<ProductResponseDTO>> getAllProducts(
+        @RequestParam(value = "stock", defaultValue = "ALL") StockLevel stockLevel 
+    ) {
+        List<ProductResponseDTO> products = productService.getProducts(stockLevel);
         return ResponseEntity.ok().body(products);
     }
     

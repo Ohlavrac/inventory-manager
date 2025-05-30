@@ -1,5 +1,6 @@
 package com.ohlavrac.inventory_manager.repositories;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,4 +19,7 @@ public interface ProductRepository extends JpaRepository<ProductEntity, UUID> {
     @Transactional
     @Query("UPDATE ProductEntity p SET p.amount = :amount WHERE p.id = :id")
     void updateProductAmount(@Param(value = "id") UUID id, @Param(value = "amount") int amount);
+
+    @Query("SELECT p FROM ProductEntity p WHERE p.amount <= :amount")
+    List<ProductEntity> getProductByStock(@Param(value = "amount") int amount);
 }
