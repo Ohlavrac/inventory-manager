@@ -12,6 +12,7 @@ import com.ohlavrac.inventory_manager.dtos.order.OrderRequestDTO;
 import com.ohlavrac.inventory_manager.dtos.order.OrderResponseDTO;
 import com.ohlavrac.inventory_manager.dtos.order.OrderSimpleResponseDTO;
 import com.ohlavrac.inventory_manager.dtos.order.OrderStatusRequestDTO;
+import com.ohlavrac.inventory_manager.exceptions.DeleteException;
 import com.ohlavrac.inventory_manager.exceptions.OrderUpdateException;
 import com.ohlavrac.inventory_manager.exceptions.ResorceNotFoundException;
 import com.ohlavrac.inventory_manager.exceptions.ResourceAmountExecption;
@@ -123,5 +124,18 @@ public class OrderService {
             orderResult.getOrderName(),
             status.orderStatus()
         );
+    }
+
+    public void deleteOrder(UUID id) {
+        OrderEntity order = orderRepository.findById(id).orElseThrow(() -> new ResorceNotFoundException("Order Not Found With ID: "+ id));
+
+        if (order.getOrderStatus() == OrderStatus.COMPLETED) {
+            throw new DeleteException("The Order ("+ order.getOrderStatus() +") Cant Be Canceleted/Delete");
+        } else if (order.getOrderStatus() == OrderStatus.ACCEPTED) {
+            productRepository.updateProductAmount(order.getProductOrder().getId(), order.getProductOrder().getAmount()+order.getQuantOrder());
+            orderRepository.delete(order);
+        } else {
+            orderRepository.delete(order);
+        }
     }
 }

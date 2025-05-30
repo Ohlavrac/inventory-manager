@@ -15,6 +15,7 @@ import java.util.UUID;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -53,5 +54,11 @@ public class OrderController {
     public ResponseEntity<?> updateOrderStatusToAccept(@PathVariable UUID id, @RequestBody OrderStatusRequestDTO status) {
         OrderSimpleResponseDTO response = orderService.updateOrderStatus(id, status);
         return ResponseEntity.ok().body(response);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteOrder(@PathVariable UUID id) {
+        orderService.deleteOrder(id);
+        return ResponseEntity.status(200).build();
     }
 }
