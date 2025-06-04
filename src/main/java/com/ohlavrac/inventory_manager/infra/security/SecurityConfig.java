@@ -2,14 +2,36 @@ package com.ohlavrac.inventory_manager.infra.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+
+    public static final String[] ENDPOINTS_WITH_AUTH_NOT_REQUIRED = {
+        "/api/users/login",
+        "/api/users",
+        "/api/auth"
+    };
+
+    public static final String[] ENDPOINTS_WITH_AUTH_REQUIRED = {
+        "/api/products",
+    };
+
+    private final SecurityFilter securityFilter;
+
+    public SecurityConfig(SecurityFilter securityFilter) {
+        this.securityFilter = securityFilter;
+    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -17,8 +39,22 @@ public class SecurityConfig {
                     .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                     .authorizeHttpRequests(
                         authorize -> authorize
-                                        .anyRequest().permitAll()
+                            .requestMatchers(HttpMethod.POST, ENDPOINTS_WITH_AUTH_NOT_REQUIRED).permitAll()
+                            .requestMatchers(HttpMethod.GET, ENDPOINTS_WITH_AUTH_REQUIRED).authenticated()
+                            .requestMatchers(HttpMethod.POST, ENDPOINTS_WITH_AUTH_NOT_REQUIRED).hasRole("EMPLOYER")
+                            .anyRequest().permitAll()
                     )
+                    .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                     .build();
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 }
