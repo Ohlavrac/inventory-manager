@@ -14,18 +14,13 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
-@EnableWebSecurity
+@EnableWebSecurity(debug = true)
 public class SecurityConfig {
 
     public static final String[] ENDPOINTS_WITH_AUTH_NOT_REQUIRED = {
-        "/api/users/login",
         "/api/users",
         "/api/auth/register",
-        "/api/auth/login"
-    };
-
-    public static final String[] ENDPOINTS_WITH_AUTH_REQUIRED = {
-        "/api/products",
+        "/api/auth/login",
     };
 
     private final SecurityFilter securityFilter;
@@ -41,9 +36,12 @@ public class SecurityConfig {
                     .authorizeHttpRequests(
                         authorize -> authorize
                             .requestMatchers(HttpMethod.POST, ENDPOINTS_WITH_AUTH_NOT_REQUIRED).permitAll()
-                            .requestMatchers(HttpMethod.GET, ENDPOINTS_WITH_AUTH_REQUIRED).authenticated()
-                            .requestMatchers(HttpMethod.POST, ENDPOINTS_WITH_AUTH_NOT_REQUIRED).hasRole("EMPLOYER")
-                            .anyRequest().permitAll()
+                            .requestMatchers(HttpMethod.GET, ENDPOINTS_WITH_AUTH_NOT_REQUIRED).permitAll()
+                            .requestMatchers(HttpMethod.GET, "/api/products").authenticated()
+                            .requestMatchers(HttpMethod.POST, "/api/products").hasAnyRole("ADMIN", "EMPLOYER")
+                            .requestMatchers(HttpMethod.PUT, "/api/products").hasAnyRole("ADMIN", "EMPLOYER")
+                            .requestMatchers(HttpMethod.DELETE, "/api/products").hasAnyRole("ADMIN", "EMPLOYER")
+                            .anyRequest().denyAll()
                     )
                     .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                     .build();
