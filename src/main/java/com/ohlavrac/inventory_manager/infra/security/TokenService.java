@@ -21,12 +21,14 @@ public class TokenService {
         try {
             Algorithm algorithm = Algorithm.HMAC256(SECRET_KEY);
 
-            return JWT.create()
+            String token = JWT.create()
                     .withIssuer(ISSUER)
+                    .withSubject(user.getUsername())
                     .withIssuedAt(creationAt())
                     .withExpiresAt(experationDate())
-                    .withSubject(user.getUsername())
                     .sign(algorithm);
+
+            return token;
         } catch (JWTCreationException exception) {
             throw new JWTCreationException("Error To Generate TOKEN", exception);
         }
