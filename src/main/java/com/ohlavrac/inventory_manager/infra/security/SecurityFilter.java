@@ -38,9 +38,7 @@ public class SecurityFilter extends OncePerRequestFilter {
         HttpServletResponse response, 
         FilterChain filterChain
     ) throws ServletException, IOException {
-        if (endpointIsPublic(request)) {
-            filterChain.doFilter(request, response);
-        } else {
+        if (!endpointIsPublic(request)) {
             String token = getToken(request);
             if (token!=null) {
                 String subject = tokenService.getSubjectFromToken(token);
@@ -54,14 +52,17 @@ public class SecurityFilter extends OncePerRequestFilter {
                 throw new RuntimeException("Token not found");
             }
         }
+
+        filterChain.doFilter(request, response);
     }
     
     public String getToken(HttpServletRequest request) {
         String authorizationHeader = request.getHeader("Authorization");
+
         if (authorizationHeader.isEmpty()) {
             return null;
         } else {
-            return authorizationHeader.replace("Bearer ", "");
+            return authorizationHeader.replace("Bearer", "");
         }
     }
     
