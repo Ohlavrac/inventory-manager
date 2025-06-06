@@ -33,6 +33,7 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public String getUsername() {
-        return userEntity.getUserName();
+        //APESAR DE SER GETUSERNAME DEVE RETORNAR O EMAIL POIS EU USO O EMAIL NOS TOKENS
+        return userEntity.getEmail();
     }   
 }
