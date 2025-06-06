@@ -45,15 +45,18 @@ public class ProductController {
     
     @GetMapping()
     public ResponseEntity<List<ProductResponseDTO>> getAllProducts(
-        @RequestParam(value = "stock", defaultValue = "ALL") StockLevel stockLevel 
+        @RequestParam(value = "stock", defaultValue = "ALL") StockLevel stockLevel
     ) {
+        
         List<ProductResponseDTO> products = productService.getProducts(stockLevel);
+        
         return ResponseEntity.ok().body(products);
     }
     
     @GetMapping("/{id}")
     public ResponseEntity<?> getProductById(@PathVariable UUID id) {
         ProductResponseDTO result = productService.getProductByID(id);
+        
         return ResponseEntity.ok().body(result);
     }
 
