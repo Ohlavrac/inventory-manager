@@ -20,6 +20,15 @@ Restful API para gerenciamento de inventario, feito com base no desafio de back-
 - [OK] `PUT /orders/{orderId}/status`: Update a status of existing order (e.g., change order status).
 - [OK] `DELETE /orders/{orderId}`: Cancel an order.
 
+## Extras
+
+- [OK] `POST /auth/register`: Register a new user.
+- [OK] `POST /auth/login`: Authenticate with user.
+- [TODO] `GET /user`: Retrive user data/infos.
+- [TODO] `PUT /user`: Update user data.
+- [TODO] `DELETE /user`: Delete user account.
+- [TODO] `PUT /admin/user/{userID}/role`: Update the role of a user (PS: Only admin can update user role).
+
 ## Desafio
 
  - [Backend Challenge - Inventory Management API](https://github.com/libre-university/backend-challenges/blob/main/challenges/junior/api-inventory-management.md#backend-challenge---inventory-management-api)
