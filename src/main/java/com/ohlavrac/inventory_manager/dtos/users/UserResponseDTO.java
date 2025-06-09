@@ -9,7 +9,7 @@ public record UserResponseDTO(
     UUID id,
     String username,
     String email,
-    List<UserRoles> roles
+    UserRoles roles
 ) {
     
 }
