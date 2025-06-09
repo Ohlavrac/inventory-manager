@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import com.ohlavrac.inventory_manager.mappers.CategoryMapper;
 import com.ohlavrac.inventory_manager.mappers.OrderMapper;
 import com.ohlavrac.inventory_manager.mappers.ProductsMapper;
+import com.ohlavrac.inventory_manager.mappers.UserMapper;
 
 @Configuration
 public class MapperConfiguration {
@@ -23,5 +24,10 @@ public class MapperConfiguration {
     @Bean
     public OrderMapper orderMapper() {
         return new OrderMapper();
+    }
+
+    @Bean
+    public UserMapper userMapper() {
+        return new UserMapper();
     }
 }
