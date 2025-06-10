@@ -1,5 +1,6 @@
 package com.ohlavrac.inventory_manager.services;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
@@ -10,19 +11,31 @@ import com.ohlavrac.inventory_manager.dtos.users.UserResponseDTO;
 import com.ohlavrac.inventory_manager.exceptions.AuthException;
 import com.ohlavrac.inventory_manager.exceptions.ResorceNotFoundException;
 import com.ohlavrac.inventory_manager.infra.security.TokenService;
+import com.ohlavrac.inventory_manager.mappers.UserMapper;
 import com.ohlavrac.inventory_manager.repositories.UserRepository;
 
 @Service
 public class AdminService {
     private final UserRepository userRepository;
     private final TokenService tokenService;
+    private final UserMapper userMapper;
 
     public AdminService(
         UserRepository userRepository,
-        TokenService tokenService
+        TokenService tokenService,
+        UserMapper userMapper
     ) {
         this.userRepository = userRepository;
         this.tokenService = tokenService;
+        this.userMapper = userMapper;
+    }
+
+    public List<UserResponseDTO> getUsers(String token) {
+        getAdminDataWithToken(token);
+
+        List<UserEntity> users = userRepository.findAll();
+
+        return users.stream().map((user) -> userMapper.entityToResponse(user)).toList();
     }
 
     public UserResponseDTO updateUserRole(String token, UUID userID, UserRoles newRole) {

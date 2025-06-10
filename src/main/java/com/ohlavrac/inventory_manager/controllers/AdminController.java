@@ -11,10 +11,12 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.GetMapping;
 
 
 @RestController
@@ -28,6 +30,13 @@ public class AdminController {
     ) {
         this.adminService = adminService;
     }
+
+    @GetMapping("/users")
+    public ResponseEntity<?> getUsers(@RequestHeader(value = "Authorization") String token) {
+        List<UserResponseDTO> response = adminService.getUsers(token);
+        return ResponseEntity.ok().body(response); 
+    }
+    
 
     @PutMapping("/users/{id}/role")
     public ResponseEntity<?> updateUserRole(@RequestHeader(value = "Authorization") String token, @PathVariable UUID id, @RequestBody RoleRequestDTO newRole) {
