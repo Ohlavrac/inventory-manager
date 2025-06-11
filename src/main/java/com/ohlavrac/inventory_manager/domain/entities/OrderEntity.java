@@ -7,6 +7,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.SecondaryRow;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.ohlavrac.inventory_manager.domain.entities.user.UserEntity;
 import com.ohlavrac.inventory_manager.domain.enums.OrderStatus;
 
 import jakarta.persistence.Column;
@@ -51,6 +52,14 @@ public class OrderEntity {
     @ManyToOne
     @JoinColumn(name = "product_id", referencedColumnName = "id")
     private ProductEntity productOrder;
+
+    @ManyToOne
+    @JoinColumn(name = "creator_id", referencedColumnName = "id")
+    private UserEntity creator;
+
+    @ManyToOne
+    @JoinColumn(name = "updated_by_id", referencedColumnName = "id")
+    private UserEntity updatedBy;
 
     @CreationTimestamp
     private Date created_at;

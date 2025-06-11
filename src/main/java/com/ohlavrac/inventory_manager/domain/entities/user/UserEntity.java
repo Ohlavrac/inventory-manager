@@ -1,7 +1,9 @@
 package com.ohlavrac.inventory_manager.domain.entities.user;
 
+import java.util.List;
 import java.util.UUID;
 
+import com.ohlavrac.inventory_manager.domain.entities.OrderEntity;
 import com.ohlavrac.inventory_manager.domain.enums.UserRoles;
 
 import jakarta.persistence.Column;
@@ -10,6 +12,7 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -39,4 +42,10 @@ public class UserEntity {
     @Column(name = "role")
     @Enumerated(EnumType.STRING)
     private UserRoles userRole;
+
+    @OneToMany(mappedBy = "creator")
+    private List<OrderEntity> orders; //ORDERS CREATED BY USER
+
+    @OneToMany(mappedBy = "updatedBy")
+    private List<OrderEntity> ordersUpdated; //ORDERS UPDATE (ACCEPTED, REFUSED, DELETEDE, CANCELED, COMPLETED) BY ADMIN
 }
