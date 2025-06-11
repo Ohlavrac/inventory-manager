@@ -6,7 +6,8 @@ public record OrderRequestDTO (
     String orderName,
     int quantOrder,
     String description,
-    UUID productOrderUUID
+    UUID productOrderUUID,
+    UUID creatorId
 ) {
     
 }

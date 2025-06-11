@@ -8,37 +8,50 @@ import org.springframework.stereotype.Service;
 
 import com.ohlavrac.inventory_manager.domain.entities.OrderEntity;
 import com.ohlavrac.inventory_manager.domain.entities.ProductEntity;
+import com.ohlavrac.inventory_manager.domain.entities.user.UserEntity;
 import com.ohlavrac.inventory_manager.domain.enums.OrderStatus;
 import com.ohlavrac.inventory_manager.dtos.order.OrderRequestDTO;
 import com.ohlavrac.inventory_manager.dtos.order.OrderResponseDTO;
 import com.ohlavrac.inventory_manager.dtos.order.OrderSimpleResponseDTO;
 import com.ohlavrac.inventory_manager.dtos.order.OrderStatusRequestDTO;
+import com.ohlavrac.inventory_manager.exceptions.AuthException;
 import com.ohlavrac.inventory_manager.exceptions.DeleteException;
 import com.ohlavrac.inventory_manager.exceptions.OrderUpdateException;
 import com.ohlavrac.inventory_manager.exceptions.ResorceNotFoundException;
 import com.ohlavrac.inventory_manager.exceptions.ResourceAmountExecption;
+import com.ohlavrac.inventory_manager.infra.security.TokenService;
 import com.ohlavrac.inventory_manager.mappers.OrderMapper;
 import com.ohlavrac.inventory_manager.repositories.OrderRepository;
 import com.ohlavrac.inventory_manager.repositories.ProductRepository;
+import com.ohlavrac.inventory_manager.repositories.UserRepository;
 
 @Service
 public class OrderService {
-    private OrderRepository orderRepository;
-    private ProductRepository productRepository;
-    private OrderMapper orderMapper;
+    private final OrderRepository orderRepository;
+    private final UserRepository userRepository;
+    private final ProductRepository productRepository;
+    private final TokenService tokenService;
+    private final OrderMapper orderMapper;
 
     public OrderService(
         OrderRepository orderRepository,
+        UserRepository userRepository,
         ProductRepository productRepository,
+        TokenService tokenService,
         OrderMapper orderMapper
     ) {
         this.orderRepository = orderRepository;
+        this.userRepository = userRepository;
         this.productRepository = productRepository;
+        this.tokenService = tokenService;
         this.orderMapper = orderMapper;
     }
 
-    public OrderResponseDTO createOrder(OrderRequestDTO orderData) {
+    public OrderResponseDTO createOrder(String token, OrderRequestDTO orderData) {
         OrderEntity order = new OrderEntity();
+
+        String userAuthEmail = tokenService.getSubjectFromToken(token);
+        UserEntity userAuthData = userRepository.findByEmail(userAuthEmail).orElseThrow(() -> new AuthException("Authentication Error"));
 
         ProductEntity product = productRepository.findById(orderData.productOrderUUID()).orElseThrow(() -> new ResorceNotFoundException("Product Not Found With ID: "+ orderData.productOrderUUID()));
         
@@ -52,6 +65,7 @@ public class OrderService {
             order.setDescription(orderData.description().isEmpty() ? defaultDescription : orderData.description());
             order.setProductOrder(product);
             order.setOrderStatus(OrderStatus.PENDING);
+            order.setCreator(userAuthData);
 
             OrderEntity orderSaved = orderRepository.save(order);
 

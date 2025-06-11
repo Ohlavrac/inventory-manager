@@ -3,7 +3,6 @@ package com.ohlavrac.inventory_manager.controllers;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ohlavrac.inventory_manager.domain.enums.UserRoles;
 import com.ohlavrac.inventory_manager.dtos.users.RoleRequestDTO;
 import com.ohlavrac.inventory_manager.dtos.users.UserResponseDTO;
 import com.ohlavrac.inventory_manager.services.AdminService;
