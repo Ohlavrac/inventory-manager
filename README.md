@@ -26,7 +26,6 @@ Restful API para gerenciamento de inventario, feito com base no desafio de back-
 - [OK] `POST /auth/login`: Authenticate with user.
 - [OK] `GET /user/details`: Retrive user data/infos.
 - [TODO] `PUT /user`: Update user data.
-- [TODO] `DELETE /user`: Delete user account.
 - [OK] `PUT /admin/user/{userID}/role`: Update the role of a user (PS: Only admin can update user role).
 
 ## Desafio
