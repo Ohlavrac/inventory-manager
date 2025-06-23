@@ -76,6 +76,20 @@ public class UserRepositoryTest {
         assertThat(result.get().getUserRole()).isEqualTo(UserRoles.EMPLOYER);
     }
 
+    @Test
+    @DisplayName("Should return true when role updated to ADMIN")
+    void testUpdateUserRoleCase2() {
+
+        this.createUser(userDTOEmployer);
+
+        Optional<UserEntity> adminUser = userRepository.findByEmail(email);
+        userRepository.updateUserRole(UserRoles.ADMIN, adminUser.get().getId());
+
+        Optional<UserEntity> result = userRepository.findByEmail(email);
+
+        assertThat(result.get().getUserRole()).isEqualTo(UserRoles.ADMIN);
+    }
+
     private UserEntity createUser(CreateUserDTO userDTO) {
         UserEntity newUser = new UserEntity();
 
