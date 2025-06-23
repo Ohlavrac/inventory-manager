@@ -26,20 +26,18 @@ public class UserRepositoryTest {
     @Autowired
     UserRepository userRepository;
 
-    
+    String email = "testemail@gmail.com";
+
+    CreateUserDTO userDTO = new CreateUserDTO(
+        email,
+        "fakeaccount",
+        "12345678",
+        UserRoles.ADMIN
+    );
 
     @Test
     @DisplayName("Should return true when get User by email from DB")
     void testFindByEmailCase1() {
-        String email = "testemail@gmail.com";
-
-        CreateUserDTO userDTO = new CreateUserDTO(
-            email,
-            "fakeaccount",
-            "12345678",
-            UserRoles.ADMIN
-        );
-
         this.createUser(userDTO);
 
         Optional<UserEntity> result = userRepository.findByEmail(email);
@@ -58,8 +56,17 @@ public class UserRepositoryTest {
     }
 
     @Test
-    void testUpdateUserRole() {
+    @DisplayName("Should return true when role updated to EMPLOYER")
+    void testUpdateUserRoleCase1() {
 
+        this.createUser(userDTO);
+
+        Optional<UserEntity> adminUser = userRepository.findByEmail(email);
+        userRepository.updateUserRole(UserRoles.EMPLOYER, adminUser.get().getId());
+
+        Optional<UserEntity> result = userRepository.findByEmail(email);
+
+        assertThat(result.get().getUserRole()).isEqualTo(UserRoles.EMPLOYER);
     }
 
     private UserEntity createUser(CreateUserDTO userDTO) {
