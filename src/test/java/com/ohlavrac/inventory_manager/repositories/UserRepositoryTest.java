@@ -28,17 +28,24 @@ public class UserRepositoryTest {
 
     String email = "testemail@gmail.com";
 
-    CreateUserDTO userDTO = new CreateUserDTO(
+    CreateUserDTO userDTOAdmin = new CreateUserDTO(
         email,
         "fakeaccount",
         "12345678",
         UserRoles.ADMIN
     );
 
+    CreateUserDTO userDTOEmployer = new CreateUserDTO(
+        email,
+        "fakeaccount",
+        "12345678",
+        UserRoles.EMPLOYER
+    );
+
     @Test
     @DisplayName("Should return true when get User by email from DB")
     void testFindByEmailCase1() {
-        this.createUser(userDTO);
+        this.createUser(userDTOAdmin);
 
         Optional<UserEntity> result = userRepository.findByEmail(email);
 
@@ -59,7 +66,7 @@ public class UserRepositoryTest {
     @DisplayName("Should return true when role updated to EMPLOYER")
     void testUpdateUserRoleCase1() {
 
-        this.createUser(userDTO);
+        this.createUser(userDTOAdmin);
 
         Optional<UserEntity> adminUser = userRepository.findByEmail(email);
         userRepository.updateUserRole(UserRoles.EMPLOYER, adminUser.get().getId());
