@@ -48,6 +48,16 @@ public class UserRepositoryTest {
     }
 
     @Test
+    @DisplayName("Should return false when cant find User by email from DB")
+    void testFindByEmailCase2() {
+        String email = "testemail@gmail.com";
+
+        Optional<UserEntity> result = userRepository.findByEmail(email);
+
+        assertThat(result.isPresent()).isFalse();
+    }
+
+    @Test
     void testUpdateUserRole() {
 
     }
