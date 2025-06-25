@@ -78,7 +78,37 @@ public class AuthServiceTest {
     }
 
     @Test
+    @DisplayName("Should create new user EMPLOYER when email does not exist")
     void testRegisterUserCase2() {
+        CreateUserDTO data = new CreateUserDTO(
+            "fakeemail@gmail.com",
+            "contafake",
+            "12345678",
+            UserRoles.EMPLOYER
+        );
+
+        when(userRepository.findByEmail(data.email())).thenReturn(Optional.empty());
+        when(securityConfig.passwordEncoder()).thenReturn(passwordEncoder);
+        when(passwordEncoder.encode(data.password())).thenReturn("crypted-password");
+
+        authService.registerUser(data);
+
+        ArgumentCaptor<UserEntity> captor = ArgumentCaptor.forClass(UserEntity.class);
+        verify(userRepository).save(captor.capture());
+
+        
+
+        UserEntity userSaved = captor.getValue();
+        assertEquals(data.email(), userSaved.getEmail());
+        assertEquals(data.username(), userSaved.getUserName());
+        assertEquals("crypted-password", userSaved.getPassword());
+        assertEquals(data.role(), userSaved.getUserRole());
+        
+        assertEquals(userSaved.getUserRole(), UserRoles.EMPLOYER);
+    }
+
+    @Test
+    void testRegisterUserCase3() {
 
     }
 }
