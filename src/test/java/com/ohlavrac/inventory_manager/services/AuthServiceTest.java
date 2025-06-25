@@ -44,6 +44,7 @@ public class AuthServiceTest {
     private AuthService authService;
 
     private CreateUserDTO userEmployer;
+    private CreateUserDTO userAdmin;
 
     @BeforeEach
     void setup() {
@@ -54,6 +55,13 @@ public class AuthServiceTest {
             "contafake",
             "12345678",
             UserRoles.EMPLOYER
+        );
+
+        userAdmin = new CreateUserDTO(
+            "fakeemail@gmail.com",
+            "contafake",
+            "12345678",
+            UserRoles.ADMIN
         );
     }
 
@@ -105,7 +113,23 @@ public class AuthServiceTest {
     }
 
     @Test
+    @DisplayName("Should create new user ADMIN when email does not exist")
     void testRegisterUserCase3() {
+        when(userRepository.findByEmail(userAdmin.email())).thenReturn(Optional.empty());
+        when(securityConfig.passwordEncoder()).thenReturn(passwordEncoder);
+        when(passwordEncoder.encode(userAdmin.password())).thenReturn("crypted-password");
 
+        authService.registerUser(userAdmin);
+
+        ArgumentCaptor<UserEntity> captor = ArgumentCaptor.forClass(UserEntity.class);
+        verify(userRepository).save(captor.capture());
+
+        UserEntity userSaved = captor.getValue();
+        assertEquals(userAdmin.email(), userSaved.getEmail());
+        assertEquals(userAdmin.username(), userSaved.getUserName());
+        assertEquals("crypted-password", userSaved.getPassword());
+        assertEquals(userAdmin.role(), userSaved.getUserRole());
+
+        assertEquals(userSaved.getUserRole(), UserRoles.ADMIN);
     }
 }
