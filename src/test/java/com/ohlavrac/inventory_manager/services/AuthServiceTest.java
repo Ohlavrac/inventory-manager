@@ -5,7 +5,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Optional;
+import java.util.UUID;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,8 +21,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import com.ohlavrac.inventory_manager.domain.entities.user.UserEntity;
 import com.ohlavrac.inventory_manager.domain.enums.UserRoles;
 import com.ohlavrac.inventory_manager.dtos.users.CreateUserDTO;
+import com.ohlavrac.inventory_manager.exceptions.AuthException;
 import com.ohlavrac.inventory_manager.infra.security.SecurityConfig;
 import com.ohlavrac.inventory_manager.infra.security.TokenService;
+import com.ohlavrac.inventory_manager.mappers.UserMapper;
 import com.ohlavrac.inventory_manager.repositories.UserRepository;
 
 public class AuthServiceTest {
@@ -131,5 +135,22 @@ public class AuthServiceTest {
         assertEquals(userAdmin.role(), userSaved.getUserRole());
 
         assertEquals(userSaved.getUserRole(), UserRoles.ADMIN);
+    }
+
+
+    @Test
+    @DisplayName("Should throw AuthException when email exists")
+    void testRegisterUserCase4() {
+        UserMapper userMapper = new UserMapper();
+
+        when(userRepository.findByEmail(userAdmin.email())).thenReturn(Optional.of(userMapper.toEntity(userAdmin)));
+        when(securityConfig.passwordEncoder()).thenReturn(passwordEncoder);
+        when(passwordEncoder.encode(userAdmin.password())).thenReturn("crypted-password");
+
+        AuthException exception = Assertions.assertThrows(AuthException.class, () -> {
+            authService.registerUser(userAdmin);
+        });
+        
+        Assertions.assertEquals("A Account With This Email Aready Exists.", exception.getMessage());
     }
 }
