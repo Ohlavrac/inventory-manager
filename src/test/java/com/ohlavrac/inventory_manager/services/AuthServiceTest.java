@@ -43,27 +43,31 @@ public class AuthServiceTest {
     @InjectMocks
     private AuthService authService;
 
+    private CreateUserDTO userEmployer;
+
     @BeforeEach
     void setup() {
         MockitoAnnotations.openMocks(this);
+
+        userEmployer = new CreateUserDTO(
+            "fakeemail@gmail.com",
+            "contafake",
+            "12345678",
+            UserRoles.EMPLOYER
+        );
     }
 
 
     @Test
     @DisplayName("Should create new user when email does not exist")
     void testRegisterUserCase1() {
-        CreateUserDTO data = new CreateUserDTO(
-            "fakeemail@gmail.com",
-            "contafake",
-            "12345678",
-            UserRoles.EMPLOYER
-        );
+        
 
-        when(userRepository.findByEmail(data.email())).thenReturn(Optional.empty());
+        when(userRepository.findByEmail(userEmployer.email())).thenReturn(Optional.empty());
         when(securityConfig.passwordEncoder()).thenReturn(passwordEncoder);
-        when(passwordEncoder.encode(data.password())).thenReturn("crypted-password");
+        when(passwordEncoder.encode(userEmployer.password())).thenReturn("crypted-password");
 
-        authService.registerUser(data);
+        authService.registerUser(userEmployer);
 
         ArgumentCaptor<UserEntity> captor = ArgumentCaptor.forClass(UserEntity.class);
         verify(userRepository).save(captor.capture());
@@ -71,27 +75,20 @@ public class AuthServiceTest {
         
 
         UserEntity userSaved = captor.getValue();
-        assertEquals(data.email(), userSaved.getEmail());
-        assertEquals(data.username(), userSaved.getUserName());
+        assertEquals(userEmployer.email(), userSaved.getEmail());
+        assertEquals(userEmployer.username(), userSaved.getUserName());
         assertEquals("crypted-password", userSaved.getPassword());
-        assertEquals(data.role(), userSaved.getUserRole());
+        assertEquals(userEmployer.role(), userSaved.getUserRole());
     }
 
     @Test
     @DisplayName("Should create new user EMPLOYER when email does not exist")
     void testRegisterUserCase2() {
-        CreateUserDTO data = new CreateUserDTO(
-            "fakeemail@gmail.com",
-            "contafake",
-            "12345678",
-            UserRoles.EMPLOYER
-        );
-
-        when(userRepository.findByEmail(data.email())).thenReturn(Optional.empty());
+        when(userRepository.findByEmail(userEmployer.email())).thenReturn(Optional.empty());
         when(securityConfig.passwordEncoder()).thenReturn(passwordEncoder);
-        when(passwordEncoder.encode(data.password())).thenReturn("crypted-password");
+        when(passwordEncoder.encode(userEmployer.password())).thenReturn("crypted-password");
 
-        authService.registerUser(data);
+        authService.registerUser(userEmployer);
 
         ArgumentCaptor<UserEntity> captor = ArgumentCaptor.forClass(UserEntity.class);
         verify(userRepository).save(captor.capture());
@@ -99,11 +96,11 @@ public class AuthServiceTest {
         
 
         UserEntity userSaved = captor.getValue();
-        assertEquals(data.email(), userSaved.getEmail());
-        assertEquals(data.username(), userSaved.getUserName());
+        assertEquals(userEmployer.email(), userSaved.getEmail());
+        assertEquals(userEmployer.username(), userSaved.getUserName());
         assertEquals("crypted-password", userSaved.getPassword());
-        assertEquals(data.role(), userSaved.getUserRole());
-        
+        assertEquals(userEmployer.role(), userSaved.getUserRole());
+
         assertEquals(userSaved.getUserRole(), UserRoles.EMPLOYER);
     }
 
