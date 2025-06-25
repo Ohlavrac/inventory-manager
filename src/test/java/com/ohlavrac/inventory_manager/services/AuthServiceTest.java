@@ -1,11 +1,13 @@
 package com.ohlavrac.inventory_manager.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Optional;
-import java.util.UUID;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,12 +17,17 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.ohlavrac.inventory_manager.domain.entities.user.UserDetailsImpl;
 import com.ohlavrac.inventory_manager.domain.entities.user.UserEntity;
 import com.ohlavrac.inventory_manager.domain.enums.UserRoles;
 import com.ohlavrac.inventory_manager.dtos.users.CreateUserDTO;
+import com.ohlavrac.inventory_manager.dtos.users.JWTTokenResponseDTO;
+import com.ohlavrac.inventory_manager.dtos.users.LoginUserDTO;
 import com.ohlavrac.inventory_manager.exceptions.AuthException;
 import com.ohlavrac.inventory_manager.infra.security.SecurityConfig;
 import com.ohlavrac.inventory_manager.infra.security.TokenService;
@@ -152,5 +159,23 @@ public class AuthServiceTest {
         });
         
         Assertions.assertEquals("A Account With This Email Aready Exists.", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("Should authenticate user and return a TOKEN")
+    void testAuthUserCase1() {
+        LoginUserDTO login = new LoginUserDTO("emailafake@gmail.com", "12345678");
+
+        Authentication authentication = mock(Authentication.class);
+        UserDetailsImpl userDetails = mock(UserDetailsImpl.class);
+
+        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).thenReturn(authentication);
+        when(authentication.getPrincipal()).thenReturn(userDetails);
+        when(tokenService.generateToken(userDetails)).thenReturn("mocked-jwt-token");
+
+        JWTTokenResponseDTO response = authService.authUser(login);
+
+        assertNotNull(response);
+        assertEquals("mocked-jwt-token", response.token());
     }
 }
