@@ -19,6 +19,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -177,5 +178,19 @@ public class AuthServiceTest {
 
         assertNotNull(response);
         assertEquals("mocked-jwt-token", response.token());
+    }
+
+    @Test
+    @DisplayName("Should thows Exception when try authenticate with bad credentials")
+    void testAuthUserCase2() {
+        LoginUserDTO login = new LoginUserDTO("emailafake@gmail.com", "12345678");
+
+        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).thenThrow(new BadCredentialsException("Bad credentials"));
+
+        BadCredentialsException exception = Assertions.assertThrows(BadCredentialsException.class, () -> {
+            authService.authUser(login);
+        });
+
+        Assertions.assertEquals("Bad credentials", exception.getMessage());
     }
 }
