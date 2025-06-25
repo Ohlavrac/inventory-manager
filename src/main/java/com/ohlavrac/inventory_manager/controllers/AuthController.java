@@ -25,7 +25,7 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<?> registerNewUser(@RequestBody CreateUserDTO data) {
-        authService.RegisterUser(data);
+        authService.registerUser(data);
         return ResponseEntity.ok().build();
     }
     

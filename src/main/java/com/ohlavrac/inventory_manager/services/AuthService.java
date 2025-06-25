@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.ohlavrac.inventory_manager.domain.entities.user.UserDetailsImpl;
@@ -23,20 +24,23 @@ public class AuthService {
     private final SecurityConfig securityConfig;
     private final TokenService tokenService;
     private final AuthenticationManager authenticationManager;
+    private final PasswordEncoder passwordEncoder;
 
     public AuthService(
         UserRepository userRepository,
         SecurityConfig securityConfig,
         TokenService tokenService,
-        AuthenticationManager authenticationManager
+        AuthenticationManager authenticationManager,
+        PasswordEncoder passwordEncoder
     ) {
         this.userRepository = userRepository;
         this.securityConfig = securityConfig;
         this.tokenService = tokenService;
         this.authenticationManager = authenticationManager;
+        this.passwordEncoder = passwordEncoder;
     }
 
-    public void RegisterUser(CreateUserDTO data) {
+    public void registerUser(CreateUserDTO data) {
 
         Optional<UserEntity> user = userRepository.findByEmail(data.email());
 
